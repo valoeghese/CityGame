@@ -9,7 +9,6 @@ public final class Logger {
 	}
 
 	private final String name;
-	private final Calendar calendar = Calendar.getInstance();
 
 	public void info(String message, Object... format) {
 		logMessage(0, message, format);
@@ -29,7 +28,7 @@ public final class Logger {
 	}
 
 	private void logMessage(int colour, String message, Object[] format) {
-		String time = TIME_FORMAT.format(this.calendar.getTime());
+		String time = TIME_FORMAT.format(Calendar.getInstance().getTime());
 
 		StringBuilder builder = new StringBuilder();
 		builder.append(ANSI_CYAN).append('[').append(time).append(']').append(ANSI_RESET).append(" ");
