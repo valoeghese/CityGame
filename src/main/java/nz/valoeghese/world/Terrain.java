@@ -57,14 +57,16 @@ public class Terrain {
 				int h = this.heightmap.get(x, y);
 
 				// Shadow on right and bottom of hills
-				if (heightmap.get(x+1, y) > h) {
-					// left of block
+				if (heightmap.get(x-1, y) > h) {
+					// left block is higher
+					// draw shadow on left of block
 					g.setColor(shadow);
 					g.drawRect(x * 8, y * 8, 1, 8);
 				}
 
 				if (heightmap.get(x, y-1) > h) {
-					// top of block
+					// above block is higher
+					// draw shadow on top of block
 					g.setColor(shadow);
 					g.drawRect(x * 8, y * 8, 8, 1);
 				}
@@ -77,10 +79,10 @@ public class Terrain {
 					g.drawRect(x * 8, (y+1) * 8, 8, 1);
 				}
 
-				if (heightmap.get(x-1, y) > h) {
+				if (heightmap.get(x+1, y) > h) {
 					// right of previous block
 					g.setColor(highlight);
-					g.drawRect((x-1) * 8, y * 8, 1, 8);
+					g.drawRect((x+1) * 8, y * 8, 1, 8);
 				}
 			}
 		}

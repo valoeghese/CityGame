@@ -13,6 +13,6 @@ public class WorldRenderer {
 	private final BufferedImage terrain;
 
 	public void render(Screen screen) {
-
+		screen.draw(this.terrain, 0, 0);
 	}
 }
