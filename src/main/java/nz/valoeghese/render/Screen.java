@@ -8,6 +8,7 @@ import java.awt.*;
  */
 public interface Screen {
 	void draw(Image image, int x, int y);
+	// width and height for drawing
 	int width();
 	int height();
 	void swapBuffers();

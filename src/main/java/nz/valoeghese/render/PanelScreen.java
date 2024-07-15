@@ -18,7 +18,7 @@ public class PanelScreen extends JPanel implements Screen {
 	@Override
 	public void swapBuffers() {
 		this.frame = this.aFrame;
-		this.aFrame = new BufferedImage(width()/scale, height()/scale, BufferedImage.TYPE_INT_ARGB);
+		this.aFrame = new BufferedImage(width(), height(), BufferedImage.TYPE_INT_ARGB);
 		this.aGraphics = this.aFrame.createGraphics();
 		this.repaint();
 	}
@@ -31,16 +31,16 @@ public class PanelScreen extends JPanel implements Screen {
 	@Override
 	public void paint(Graphics g) {
 		((Graphics2D) g).setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
-		g.drawImage(this.frame, 0, 0, width(), height(), null);
+		g.drawImage(this.frame, 0, 0, getWidth(), getHeight(), null);
 	}
 
 	@Override
 	public int width() {
-		return this.getWidth();
+		return this.getWidth() / scale;
 	}
 
 	@Override
 	public int height() {
-		return this.getHeight();
+		return this.getHeight() / scale;
 	}
 }
