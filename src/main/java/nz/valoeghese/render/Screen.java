@@ -8,6 +8,8 @@ import java.awt.*;
  */
 public interface Screen {
 	void draw(Image image, int x, int y);
+	void setColour(Color colour);
+	void drawRect(int x, int y, int width, int height);
 	// width and height for drawing
 	int width();
 	int height();
