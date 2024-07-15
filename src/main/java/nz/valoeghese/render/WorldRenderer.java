@@ -51,14 +51,14 @@ public class WorldRenderer {
 					// left block is higher
 					// draw shadow on left of block
 					g.setColor(shadow);
-					g.drawRect(x * 8, y * 8, 1, 8);
+					g.drawRect(x * 8, y * 8, 0, 7);
 				}
 
 				if (heightmap.get(x, y-1) > h) {
 					// above block is higher
 					// draw shadow on top of block
 					g.setColor(shadow);
-					g.drawRect(x * 8, y * 8, 8, 1);
+					g.drawRect(x * 8, y * 8, 7, 0);
 				}
 
 				// Highlight on top and right of hills
@@ -66,13 +66,13 @@ public class WorldRenderer {
 				if (heightmap.get(x, y+1) > h) {
 					// top of next block
 					g.setColor(highlight);
-					g.drawRect(x * 8, (y+1) * 8, 8, 1);
+					g.drawRect(x * 8, (y+1) * 8, 7, 0);
 				}
 
 				if (heightmap.get(x+1, y) > h) {
 					// right of previous block
 					g.setColor(highlight);
-					g.drawRect((x+1) * 8, y * 8, 1, 8);
+					g.drawRect((x+1) * 8, y * 8, 0, 7);
 				}
 			}
 		}
