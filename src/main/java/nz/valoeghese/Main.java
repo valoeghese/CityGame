@@ -20,11 +20,12 @@ public class Main {
 			@Override
 			public void windowClosing(WindowEvent e) {
 				game.shutdown();
-				System.exit(0); // Exit the application gracefully
+				System.exit(0);
 			}
 		});
 
-		frame.setSize(new Dimension(720, 480));
+		frame.setMaximumSize(new Dimension(720, 480));
+		frame.setMinimumSize(new Dimension(720, 480));
 		frame.setVisible(true);
 		game.run();
 	}
