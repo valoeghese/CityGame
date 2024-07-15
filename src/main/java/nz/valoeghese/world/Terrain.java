@@ -104,16 +104,10 @@ public class Terrain {
 		WATER("water.png");
 
 		Tile(String imageLocation) {
-			try (InputStream stream = new BufferedInputStream(
-					Objects.requireNonNull(Terrain.class.getClassLoader().getResourceAsStream("assets/textures/" + imageLocation), "Could not load stream for " + imageLocation)
-			)) {
-				this.image = ImageIO.read(stream);
-			} catch (IOException e) {
-				throw new UncheckedIOException("Unable to load texture " + imageLocation, e);
-			}
+			this.imageLocation = "terrain/" + imageLocation;
 		}
 
-		public final BufferedImage image;
+		public final String imageLocation;
 	}
 
 	private static final Logger LOGGER = new Logger("Worldgen");

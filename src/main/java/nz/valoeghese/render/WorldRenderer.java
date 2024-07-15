@@ -8,8 +8,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class WorldRenderer {
-	public WorldRenderer(World world) {
-		this.terrain = drawComposite(world.getTerrain());
+	public WorldRenderer(World world, ResourceLoader resourceLoader) {
+		this.terrain = drawComposite(world.getTerrain(), resourceLoader);
 	}
 
 	private final BufferedImage terrain;
@@ -18,7 +18,7 @@ public class WorldRenderer {
 		screen.draw(this.terrain, 0, 0);
 	}
 
-	public static BufferedImage drawComposite(Terrain terrain) {
+	public static BufferedImage drawComposite(Terrain terrain, ResourceLoader resourceLoader) {
 		int width = terrain.getWidth();
 		int height = terrain.getHeight();
 
@@ -32,7 +32,7 @@ public class WorldRenderer {
 				Terrain.Tile tile = terrain.tiles[x][y];
 
 				g.drawImage(
-						tile.image.getSubimage((x & 1) * 8, (y & 1) * 8, 8, 8),
+						resourceLoader.getTexture(tile.imageLocation).getSubimage((x & 1) * 8, (y & 1) * 8, 8, 8),
 						x * 8, y * 8, null);
 			}
 		}

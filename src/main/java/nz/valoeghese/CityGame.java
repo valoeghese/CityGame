@@ -1,5 +1,6 @@
 package nz.valoeghese;
 
+import nz.valoeghese.render.ResourceLoader;
 import nz.valoeghese.render.Screen;
 import nz.valoeghese.render.WorldRenderer;
 import nz.valoeghese.util.Logger;
@@ -10,11 +11,13 @@ import java.util.Random;
 public class CityGame {
 	public CityGame(Screen screen) {
 		this.screen = screen;
+		this.resourceLoader = new ResourceLoader();
 		this.world = new World(new Random().nextLong());
-		this.worldRenderer = new WorldRenderer(this.world);
+		this.worldRenderer = new WorldRenderer(this.world, this.resourceLoader);
 	}
 
 	private final Screen screen;
+	private final ResourceLoader resourceLoader;
 	private final World world;
 	private final WorldRenderer worldRenderer;
 	private final Logger logger = new Logger("CityGame");
