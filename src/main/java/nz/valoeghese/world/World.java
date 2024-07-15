@@ -6,4 +6,8 @@ public class World {
 	}
 
 	private final Terrain terrain;
+
+	public Terrain getTerrain() {
+		return this.terrain;
+	}
 }

@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
 public class Terrain {
 	private Terrain(Tile[][] tiles, OOBAccessor<Byte> heightmap, int width, int height) {
@@ -33,7 +32,8 @@ public class Terrain {
 		return this.height;
 	}
 
-	public BufferedImage composite() {
+	public BufferedImage drawComposite() {
+		// Create new image
 		BufferedImage composite = new BufferedImage(this.width * 8, this.height * 8, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g = composite.createGraphics();
 
@@ -134,6 +134,8 @@ public class Terrain {
 
 					if (bottom < h) {
 						tileMap[x][y] = Tile.HILL;
+					} else {
+						tileMap[x][y] = Tile.GRASS;
 					}
 				}
 			}
@@ -151,7 +153,9 @@ public class Terrain {
 		WATER("water.png");
 
 		Tile(String imageLocation) {
-			try (InputStream stream = new BufferedInputStream(Objects.requireNonNull(Terrain.class.getResourceAsStream("assets/textures/" + imageLocation)))) {
+			try (InputStream stream = new BufferedInputStream(
+					Objects.requireNonNull(Terrain.class.getClassLoader().getResourceAsStream("assets/textures/" + imageLocation), "Could not load stream for " + imageLocation)
+			)) {
 				this.image = ImageIO.read(stream);
 			} catch (IOException e) {
 				throw new UncheckedIOException("Unable to load texture " + imageLocation, e);

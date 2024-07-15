@@ -1,6 +1,7 @@
 package nz.valoeghese;
 
 import nz.valoeghese.render.Screen;
+import nz.valoeghese.render.WorldRenderer;
 import nz.valoeghese.util.Logger;
 import nz.valoeghese.world.World;
 
@@ -10,10 +11,12 @@ public class CityGame {
 	public CityGame(Screen screen) {
 		this.screen = screen;
 		this.world = new World(new Random().nextLong());
+		this.worldRenderer = new WorldRenderer(this.world);
 	}
 
 	private final Screen screen;
 	private final World world;
+	private final WorldRenderer worldRenderer;
 	private final Logger logger = new Logger("CityGame");
 
 	private volatile boolean running;
@@ -44,7 +47,9 @@ public class CityGame {
 	}
 
 	private void render() {
-
+		// draw world terrain
+		this.worldRenderer.render(this.screen);
+		this.screen.swapBuffers();
 	}
 
 	private void tick() {

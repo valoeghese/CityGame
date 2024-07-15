@@ -7,8 +7,8 @@ public class OOBAccessor<T> {
 	public OOBAccessor(T[][] array, T oobValue) {
 		this.array = array;
 		this.oob = oobValue;
-		this.h = array.length;
-		this.w = array[0].length;
+		this.w = array.length;
+		this.h = array[0].length;
 	}
 
 	private final T[][] array;
