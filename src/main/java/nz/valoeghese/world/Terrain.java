@@ -92,6 +92,8 @@ public class Terrain {
 
 	public static Terrain generate(long seed, int width, int height) {
 		GradientNoise heightNoise = new GradientNoise(seed);
+		//GradientNoise hillsNoise = new GradientNoise(seed+1);
+
 		Byte[][] rawHeights = new Byte[width][height];
 
 		for (int x = 0; x < width; x++) {
@@ -102,9 +104,9 @@ public class Terrain {
 				// stratiate
 				if (h < 0.15f) {
 					rawHeights[x][y] = 0;
-				} else if (h < 0.30f) {
+				} else if (h < 0.40f) {
 					rawHeights[x][y] = 1;
-				} else if (h < 0.45f) {
+				} else if (h < 0.55f) {
 					rawHeights[x][y] = 2;
 				} else {
 					rawHeights[x][y] = 3;
