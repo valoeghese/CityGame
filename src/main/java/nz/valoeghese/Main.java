@@ -24,8 +24,8 @@ public class Main {
 			}
 		});
 
-		frame.setMaximumSize(new Dimension(720, 480));
-		frame.setMinimumSize(new Dimension(720, 480));
+		frame.setSize(new Dimension(720, 480));
+		frame.setResizable(false);
 		frame.setVisible(true);
 		game.run();
 	}

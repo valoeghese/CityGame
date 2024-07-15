@@ -32,67 +32,8 @@ public class Terrain {
 		return this.height;
 	}
 
-	public BufferedImage drawComposite() {
-		// Create new image
-		BufferedImage composite = new BufferedImage(this.width * 8, this.height * 8, BufferedImage.TYPE_INT_ARGB);
-		Graphics2D g = composite.createGraphics();
-
-		// stitch image
-		for (int x = 0; x < width; x++) {
-			for (int y = 0; y < height; y++) {
-				Tile tile = this.tiles[x][y];
-
-				g.drawImage(
-						tile.image.getSubimage((x & 1) * 8, (y & 1) * 8, 8, 8),
-						x * 8, y * 8, null);
-			}
-		}
-
-		// add shadows and highlights
-		Color shadow = new Color(0, 30, 30, 64);
-		Color highlight = new Color(200, 200, 200, 64);
-
-		for (int x = 0; x < width; x++) {
-			for (int y = 0; y < height; y++) {
-				int h = this.heightmap.get(x, y);
-
-				// Shadow on right and bottom of hills
-				if (heightmap.get(x-1, y) > h) {
-					// left block is higher
-					// draw shadow on left of block
-					g.setColor(shadow);
-					g.drawRect(x * 8, y * 8, 1, 8);
-				}
-
-				if (heightmap.get(x, y-1) > h) {
-					// above block is higher
-					// draw shadow on top of block
-					g.setColor(shadow);
-					g.drawRect(x * 8, y * 8, 8, 1);
-				}
-
-				// Highlight on top and right of hills
-				// Default heightmap is -1 so this will never draw out of bounds as that's always lower
-				if (heightmap.get(x, y+1) > h) {
-					// top of next block
-					g.setColor(highlight);
-					g.drawRect(x * 8, (y+1) * 8, 8, 1);
-				}
-
-				if (heightmap.get(x+1, y) > h) {
-					// right of previous block
-					g.setColor(highlight);
-					g.drawRect((x+1) * 8, y * 8, 1, 8);
-				}
-			}
-		}
-
-		return composite;
-	}
-
 	public static Terrain generate(long seed, int width, int height) {
 		GradientNoise heightNoise = new GradientNoise(seed);
-		//GradientNoise hillsNoise = new GradientNoise(seed+1);
 
 		Byte[][] rawHeights = new Byte[width][height];
 
