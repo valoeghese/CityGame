@@ -10,7 +10,8 @@ import java.awt.event.WindowEvent;
 public class Main {
 	public static void main(String[] args) {
 		JFrame frame = new JFrame("City Game");
-		Screen screen = Screen.getScreen(frame);
+		final int scale = 2;
+		Screen screen = Screen.getScreen(frame, scale);
 
 		CityGame game = new CityGame(screen);
 
@@ -24,7 +25,7 @@ public class Main {
 			}
 		});
 
-		frame.setSize(new Dimension(720, 480));
+		frame.setSize(new Dimension(720 * scale, 480 * scale));
 		frame.setResizable(false);
 		frame.setVisible(true);
 		game.run();

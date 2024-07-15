@@ -12,8 +12,8 @@ public interface Screen {
 	int height();
 	void swapBuffers();
 
-	static Screen getScreen(JFrame frame) {
-		PanelScreen screen = new PanelScreen();
+	static Screen getScreen(JFrame frame, int scale) {
+		PanelScreen screen = new PanelScreen(scale);
 		frame.add(screen);
 		return screen;
 	}
