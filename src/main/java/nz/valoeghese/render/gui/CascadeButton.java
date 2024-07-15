@@ -26,7 +26,8 @@ public class CascadeButton extends Button {
 	@Override
 	public void tick() {
 		if (cascading && actualWidth < getSpecifiedWidth()) {
-			actualWidth = Math.min(getSpecifiedWidth(), actualWidth + 5);
+			int advance = Math.max((getSpecifiedWidth() - actualWidth) / 5, 2);
+			actualWidth = Math.min(getSpecifiedWidth(), actualWidth + advance);
 
 			// at halfway start next button cascading
 			if (next != null && actualWidth >= getSpecifiedWidth()/2) {

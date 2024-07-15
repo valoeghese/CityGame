@@ -7,6 +7,8 @@ import java.awt.image.BufferedImage;
 public class PanelScreen extends JPanel implements Screen {
 	PanelScreen(int scale) {
 		this.scale = scale;
+
+		this.drawContext = this.aGraphics = aFrame.createGraphics();
 	}
 
 	private int scale;
@@ -14,10 +16,16 @@ public class PanelScreen extends JPanel implements Screen {
 
 	private BufferedImage frame = new BufferedImage(720, 480, BufferedImage.TYPE_INT_ARGB);
 	private BufferedImage aFrame = new BufferedImage(720, 480, BufferedImage.TYPE_INT_ARGB);
-	private Graphics2D aGraphics = aFrame.createGraphics();
+	private BufferedImage stencil;
+	private final int[] stencilOffset = {0, 0};
+
+	private Graphics2D aGraphics;
+	private Graphics2D drawContext;
 
 	@Override
 	public void swapBuffers() {
+		this.endStencil();
+
 		if (painting) {
 			return; // skip frame. we are still drawing previous frame!
 		}
@@ -31,24 +39,56 @@ public class PanelScreen extends JPanel implements Screen {
 			this.aFrame = oldFrame;
 		}
 
-		this.aGraphics = this.aFrame.createGraphics();
+		this.drawContext = this.aGraphics = this.aFrame.createGraphics();
 		painting = true;
 		this.repaint();
 	}
 
 	@Override
 	public void draw(Image image, int x, int y) {
-		this.aGraphics.drawImage(image, x, y, null);
+		this.drawContext.drawImage(image, x, y, null);
+	}
+
+	@Override
+	public void drawOutline(int x, int y, int width, int height) {
+		this.drawContext.drawRect(x, y, width, height);
 	}
 
 	@Override
 	public void drawRect(int x, int y, int width, int height) {
-		this.aGraphics.drawRect(x, y, width, height);
+		this.drawContext.fillRect(x, y, width, height);
+	}
+
+	@Override
+	public void write(String text, int x, int y) {
+		this.drawContext.drawString(text, x, y);
 	}
 
 	@Override
 	public void setColour(Color colour) {
-		this.aGraphics.setColor(colour);
+		this.drawContext.setColor(colour);
+	}
+
+	@Override
+	public void stencil(int x, int y, int width, int height) {
+		if (this.stencil != null) {
+			this.endStencil();
+		}
+
+		this.stencil = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+		this.stencilOffset[0] = x;
+		this.stencilOffset[1] = y;
+	}
+
+	@Override
+	public void endStencil() {
+		if (this.stencil != null) {
+			this.aGraphics.drawImage(this.stencil, this.stencilOffset[0], this.stencilOffset[1], null);
+		}
+
+		// revert to full screen
+		this.drawContext = this.aGraphics;
+		this.stencil = null;
 	}
 
 	@Override
