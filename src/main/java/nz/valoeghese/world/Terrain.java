@@ -75,12 +75,11 @@ public class Terrain {
 				} else {
 					int bottom = heightmap.get(x, y+1);
 
-					// are we low and adjacent to water
-					if (h == 1) {
+					// are we low and adjacent to water & in beach zone
+					if (h == 1 && hillNoise.noise(x / 20.0f, y / 20.0f) < -0.34f) {
 						if (heightmap.get(x, y-1) == 0 || bottom == 0 || heightmap.get(x-1,y) == 0 || heightmap.get(x+1,y) == 0) {
 							tileMap[x][y] = Tile.SAND;
-						} else {
-							tileMap[x][y] = Tile.GRASS;
+							continue;
 						}
 					}
 
