@@ -34,23 +34,30 @@ public class Terrain {
 
 	public static Terrain generate(long seed, int width, int height) {
 		GradientNoise heightNoise = new GradientNoise(seed);
+		GradientNoise hillNoise = new GradientNoise(seed);
 
 		Byte[][] rawHeights = new Byte[width][height];
 
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
-				float h = heightNoise.noise(x / 20.0f, y / 20.0f);
+				float h = heightNoise.noise(x / 45.0f, y / 45.0f);
 				// fold around 0
 				h = Math.abs(h);
+
 				// stratiate
-				if (h < 0.15f) {
+				if (h < 0.10f) {
 					rawHeights[x][y] = 0;
-				} else if (h < 0.40f) {
-					rawHeights[x][y] = 1;
-				} else if (h < 0.55f) {
-					rawHeights[x][y] = 2;
 				} else {
-					rawHeights[x][y] = 3;
+					// add hills detail
+					h += 0.5f * Math.max(0, hillNoise.noise(x / 20.0f, y / 20.0f));
+
+					if (h < 0.50f) {
+						rawHeights[x][y] = 1;
+					} else if (h < 0.65f) {
+						rawHeights[x][y] = 2;
+					} else {
+						rawHeights[x][y] = 3;
+					}
 				}
 			}
 		}
