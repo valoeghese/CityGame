@@ -5,7 +5,7 @@ import nz.valoeghese.render.Screen;
 import nz.valoeghese.render.gui.CascadeButton;
 import nz.valoeghese.render.gui.DropdownMenu;
 import nz.valoeghese.render.WorldRenderer;
-import nz.valoeghese.render.gui.GuiElement;
+import nz.valoeghese.render.gui.AbstractWidget;
 import nz.valoeghese.util.Logger;
 import nz.valoeghese.world.World;
 
@@ -28,7 +28,7 @@ public class CityGame {
 	private final MouseTracker tracker;
 	private final World world;
 	private final WorldRenderer worldRenderer;
-	private final List<GuiElement> guiElements = new ArrayList<>();
+	private final List<AbstractWidget> widgets = new ArrayList<>();
 
 	private volatile boolean running;
 	private long lastTick = System.currentTimeMillis();
@@ -64,7 +64,7 @@ public class CityGame {
 	private boolean computeSelectTerrain(int mouseX, int mouseY) {
 		// determine if we're selecting terrain
 		// we are only selecting a tile if no gui in the way
-		for (GuiElement element : this.guiElements) {
+		for (AbstractWidget element : this.widgets) {
 			if (element.contains(mouseX, mouseY)) {
 				return false;
 			}
@@ -92,7 +92,7 @@ public class CityGame {
 		}
 
 		// draw gui
-		for (GuiElement element : this.guiElements) {
+		for (AbstractWidget element : this.widgets) {
 			element.render(this.screen, mouseX, mouseY);
 		}
 
@@ -108,16 +108,16 @@ public class CityGame {
 			if (this.selectedTerrain) {
 				// Replace Dropdown Menu
 				if (this.dropdown != null) {
-					this.guiElements.remove(this.dropdown); // TODO fancy close
+					this.widgets.remove(this.dropdown); // TODO fancy close
 				}
 
-				CascadeButton develop = new CascadeButton(null, 40, 16, bx -> {});
-				CascadeButton cancel = new CascadeButton(develop, 35, 16, bx -> {});
-				this.guiElements.add(this.dropdown = new DropdownMenu(mouseX/8 * 8, mouseY/8 * 8, develop, cancel));
+				CascadeButton develop = new CascadeButton(null, "Develop", 40, 16, bx -> {});
+				CascadeButton cancel = new CascadeButton(develop, "Cancel", 35, 16, bx -> {});
+				this.widgets.add(this.dropdown = new DropdownMenu(mouseX/8 * 8, mouseY/8 * 8, develop, cancel));
 
 				// in case selecting the menu and tick runs again
 				this.selectedTerrain = this.computeSelectTerrain(mouseX, mouseY);
-			} else for (GuiElement element : this.guiElements) {
+			} else for (AbstractWidget element : this.widgets) {
 				if (element.contains(mouseX, mouseY)) {
 					element.mouseClicked(mouseX, mouseY);
 				}
@@ -125,7 +125,7 @@ public class CityGame {
 		}
 
 		// tick
-		for (GuiElement element : this.guiElements) {
+		for (AbstractWidget element : this.widgets) {
 			element.tick();
 		}
 	}

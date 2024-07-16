@@ -5,23 +5,23 @@ import nz.valoeghese.render.Screen;
 import java.awt.*;
 import java.util.function.Consumer;
 
-public class Button implements GuiElement {
-	public Button(int width, int height, Consumer<Button> onPress) {
+public class Button extends AbstractWidget {
+	public Button(String message, int width, int height, Consumer<Button> onPress) {
+		super(0, 0, width, height);
 		this.width = width;
 		this.height = height;
 		this.onPress = onPress;
+		this.message = message;
 	}
 
-	private int x;
-	private int y;
-	private final int width;
-	private final int height;
+	private String message;
 	private final Consumer<Button> onPress;
 
 	@Override
 	public void render(Screen screen, int mouseX, int mouseY) {
 		screen.setColour(Color.BLACK);
 		screen.drawRect(this.x, this.y, getWidth(), getHeight());
+		screen.write(this.message, this.x, this.y);
 	}
 
 	/**
@@ -62,15 +62,5 @@ public class Button implements GuiElement {
 	@Override
 	public int getHeight() {
 		return this.height;
-	}
-
-	@Override
-	public int getX() {
-		return this.x;
-	}
-
-	@Override
-	public int getY() {
-		return this.y;
 	}
 }

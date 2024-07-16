@@ -8,8 +8,8 @@ import java.util.function.Consumer;
  * Button in a chain that cascade-opens.
  */
 public class CascadeButton extends Button {
-	public CascadeButton(@Nullable CascadeButton previous, int width, int height, Consumer<Button> onPress) {
-		super(width, height, onPress);
+	public CascadeButton(@Nullable CascadeButton previous, String message, int width, int height, Consumer<Button> onPress) {
+		super(message, width, height, onPress);
 
 		// assign cascade
 		if (previous == null) {

@@ -4,7 +4,7 @@ import nz.valoeghese.render.Screen;
 
 import java.util.stream.Stream;
 
-public class DropdownMenu implements GuiElement {
+public class DropdownMenu extends AbstractWidget {
 	/**
 	 * Create a new dropdown menu at the given position.
 	 * @param x the x position to spawn the menu from.
@@ -12,16 +12,14 @@ public class DropdownMenu implements GuiElement {
 	 * @param buttons the buttons, from top to bottom, to put int he dropdown menu.
 	 */
 	public DropdownMenu(int x, int y, Button... buttons) {
-		this.x = x;
-		this.y = y;
-		this.w = Stream.of(buttons).mapToInt(Button::getSpecifiedWidth).max().orElseThrow(() -> new RuntimeException("Empty dropdown menu"));
-		this.h = Stream.of(buttons).mapToInt(Button::getSpecifiedHeight).sum() + ITEM_GAP * (buttons.length - 1);
+		super(x, y,
+				Stream.of(buttons).mapToInt(Button::getSpecifiedWidth).max().orElseThrow(() -> new RuntimeException("Empty dropdown menu")),
+				Stream.of(buttons).mapToInt(Button::getSpecifiedHeight).sum() + ITEM_GAP * (buttons.length - 1)
+		);
+
 		this.buttons = buttons;
 	}
 
-	private final int x;
-	private final int y;
-	private final int w, h;
 	private final Button[] buttons;
 
 	@Override
@@ -37,7 +35,7 @@ public class DropdownMenu implements GuiElement {
 		final int renderX;
 		boolean drawBackwards;
 
-		if (x + this.w + MENU_OFFSET > screen.width()) {
+		if (x + this.width + MENU_OFFSET > screen.width()) {
 			renderX = x - MENU_OFFSET;
 			drawBackwards = true;
 		} else {
@@ -47,8 +45,8 @@ public class DropdownMenu implements GuiElement {
 
 		int buttonY;
 
-		if (y - MENU_OFFSET + this.h > screen.height()) {
-			buttonY = y + MENU_OFFSET - this.h;
+		if (y - MENU_OFFSET + this.height > screen.height()) {
+			buttonY = y + MENU_OFFSET - this.height;
 		} else {
 			buttonY = Math.max(0, y - MENU_OFFSET);
 		}
@@ -59,26 +57,6 @@ public class DropdownMenu implements GuiElement {
 			button.move(buttonX, buttonY).render(screen, mouseX, mouseY);
 			buttonY += button.getSpecifiedHeight() + ITEM_GAP;
 		}
-	}
-
-	@Override
-	public int getX() {
-		return this.x;
-	}
-
-	@Override
-	public int getY() {
-		return this.y;
-	}
-
-	@Override
-	public int getWidth() {
-		return this.w;
-	}
-
-	@Override
-	public int getHeight() {
-		return this.h;
 	}
 
 	private static final int MENU_OFFSET = 8;
