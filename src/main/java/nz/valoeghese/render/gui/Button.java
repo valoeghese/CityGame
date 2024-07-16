@@ -19,10 +19,12 @@ public class Button extends AbstractWidget {
 
 	@Override
 	public void render(Screen screen, int mouseX, int mouseY) {
-		screen.setColour(Color.DARK_GRAY);
+		boolean hover = this.contains(mouseX, mouseY);
+
+		screen.setColour(hover ? Color.LIGHT_GRAY : Color.DARK_GRAY);
 		screen.drawRect(this.x, this.y, getWidth(), getHeight());
 
-		screen.setColour(Color.LIGHT_GRAY);
+		screen.setColour(hover ? Color.WHITE : Color.LIGHT_GRAY);
 		screen.write(this.message, this.x, this.y + (this.height + screen.fontHeight()) / 2);
 	}
 

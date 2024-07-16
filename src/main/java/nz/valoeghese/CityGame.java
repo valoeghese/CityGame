@@ -29,6 +29,7 @@ public class CityGame {
 	private final World world;
 	private final WorldRenderer worldRenderer;
 	private final List<AbstractWidget> widgets = new ArrayList<>();
+	private final List<AbstractWidget> toRemove = new ArrayList<>();
 
 	private volatile boolean running;
 	private long lastTick = System.currentTimeMillis();
@@ -103,6 +104,12 @@ public class CityGame {
 
 		// done
 		this.screen.swapBuffers();
+
+		// remove widgets
+		for (AbstractWidget widget : this.toRemove) {
+			this.widgets.remove(widget);
+		}
+		this.toRemove.clear();
 	}
 
 	private void tick(int mouseX, int mouseY) {
@@ -117,7 +124,11 @@ public class CityGame {
 				}
 
 				CascadeButton develop = new CascadeButton(null, "Develop", this.screen.fontWidth("Develop") + 2, 16, bx -> {});
-				CascadeButton cancel = new CascadeButton(develop, "Cancel", this.screen.fontWidth("Cancel") + 2, 16, bx -> {});
+				CascadeButton cancel = new CascadeButton(develop, "Cancel", this.screen.fontWidth("Cancel") + 2, 16, bx -> {
+					this.toRemove.add(this.dropdown);
+					this.selectedTile[0] = -1;
+					this.selectedTile[1] = -1;
+				});
 				this.selectedTile[0] = mouseX/8;
 				this.selectedTile[1] = mouseY/8;
 				this.widgets.add(this.dropdown = new DropdownMenu(mouseX/8 * 8, mouseY/8 * 8, develop, cancel));
