@@ -46,22 +46,22 @@ public class PanelScreen extends JPanel implements Screen {
 
 	@Override
 	public void draw(Image image, int x, int y) {
-		this.drawContext.drawImage(image, x, y, null);
+		this.drawContext.drawImage(image, x - this.stencilOffset[0], y - this.stencilOffset[1], null);
 	}
 
 	@Override
 	public void drawOutline(int x, int y, int width, int height) {
-		this.drawContext.drawRect(x, y, width, height);
+		this.drawContext.drawRect(x - this.stencilOffset[0], y - this.stencilOffset[1], width, height);
 	}
 
 	@Override
 	public void drawRect(int x, int y, int width, int height) {
-		this.drawContext.fillRect(x, y, width, height);
+		this.drawContext.fillRect(x - this.stencilOffset[0], y - this.stencilOffset[1], width, height);
 	}
 
 	@Override
 	public void write(String text, int x, int y) {
-		this.drawContext.drawString(text, x, y);
+		this.drawContext.drawString(text, x - this.stencilOffset[0], y - this.stencilOffset[1]);
 	}
 
 	@Override
@@ -78,6 +78,7 @@ public class PanelScreen extends JPanel implements Screen {
 		this.stencil = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		this.stencilOffset[0] = x;
 		this.stencilOffset[1] = y;
+		this.drawContext = this.stencil.createGraphics();
 	}
 
 	@Override
@@ -88,6 +89,8 @@ public class PanelScreen extends JPanel implements Screen {
 
 		// revert to full screen
 		this.drawContext = this.aGraphics;
+		this.stencilOffset[0] = 0;
+		this.stencilOffset[1] = 0;
 		this.stencil = null;
 	}
 
@@ -106,5 +109,10 @@ public class PanelScreen extends JPanel implements Screen {
 	@Override
 	public int height() {
 		return this.getHeight() / scale;
+	}
+
+	@Override
+	public int fontHeight() {
+		return this.drawContext.getFontMetrics().getAscent();
 	}
 }

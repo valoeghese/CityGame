@@ -21,7 +21,9 @@ public class Button extends AbstractWidget {
 	public void render(Screen screen, int mouseX, int mouseY) {
 		screen.setColour(Color.BLACK);
 		screen.drawRect(this.x, this.y, getWidth(), getHeight());
-		screen.write(this.message, this.x, this.y);
+
+		screen.setColour(Color.LIGHT_GRAY);
+		screen.write(this.message, this.x, this.y + (this.height + screen.fontHeight()) / 2);
 	}
 
 	/**

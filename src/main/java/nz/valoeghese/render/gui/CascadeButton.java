@@ -1,5 +1,6 @@
 package nz.valoeghese.render.gui;
 
+import nz.valoeghese.render.Screen;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
@@ -34,6 +35,13 @@ public class CascadeButton extends Button {
 				next.cascading = true;
 			}
 		}
+	}
+
+	@Override
+	public void render(Screen screen, int mouseX, int mouseY) {
+		screen.stencil(this.x, this.y, Math.max(1, this.getWidth()), this.getHeight());
+		super.render(screen, mouseX, mouseY);
+		screen.endStencil();
 	}
 
 	@Override
