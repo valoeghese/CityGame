@@ -1,7 +1,9 @@
 package nz.valoeghese.render.gui;
 
+import nz.valoeghese.CityGame;
 import nz.valoeghese.render.Screen;
 
+import java.awt.*;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -23,6 +25,9 @@ public class DropdownMenu extends AbstractWidget {
 
 	private final Button[] buttons;
 
+	private int cornerX;
+	private int cornerY;
+
 	@Override
 	public void tick() {
 		for (Button button : this.buttons) {
@@ -39,9 +44,11 @@ public class DropdownMenu extends AbstractWidget {
 		if (x + this.width + MENU_OFFSET > screen.width()) {
 			renderX = x - MENU_OFFSET;
 			drawBackwards = true;
+			this.cornerX = renderX - this.width;
 		} else {
 			renderX = x + MENU_OFFSET;
 			drawBackwards = false;
+			this.cornerX = renderX;
 		}
 
 		int buttonY;
@@ -51,6 +58,8 @@ public class DropdownMenu extends AbstractWidget {
 		} else {
 			buttonY = Math.max(0, y - MENU_OFFSET);
 		}
+
+		this.cornerY = buttonY;
 
 		// draw
 		for (Button button : this.buttons) {
@@ -63,6 +72,16 @@ public class DropdownMenu extends AbstractWidget {
 	@Override
 	public Iterable<AbstractWidget> getChildren() {
 		return List.of(this.buttons);
+	}
+
+	@Override
+	public int getX() {
+		return this.cornerX;
+	}
+
+	@Override
+	public int getY() {
+		return this.cornerY;
 	}
 
 	private static final int MENU_OFFSET = 8;
