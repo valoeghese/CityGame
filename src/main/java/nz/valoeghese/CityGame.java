@@ -33,8 +33,9 @@ public class CityGame {
 	private volatile boolean running;
 	private long lastTick = System.currentTimeMillis();
 	private long tickCount = 0;
-	private boolean selectedTerrain;
+	private boolean selectingTerrain;
 
+	private int[] selectedTile = {-1, -1};
 	private DropdownMenu dropdown;
 
 	/**
@@ -50,7 +51,7 @@ public class CityGame {
 			int mouseX = this.tracker.getMouseX();
 			int mouseY = this.tracker.getMouseY();
 
-			this.selectedTerrain = this.computeSelectTerrain(mouseX, mouseY);
+			this.selectingTerrain = this.computeSelectTerrain(mouseX, mouseY);
 			render(mouseX, mouseY);
 
 			while (ticks --> 0) {
@@ -82,7 +83,11 @@ public class CityGame {
 		this.worldRenderer.render(this.screen);
 
 		// draw selected tile
-		if (this.selectedTerrain) {
+		this.screen.setColour(new Color(1.0f, 1.0f, 1.0f, 0.75f));
+		this.screen.drawRect(this.selectedTile[0] * 8, this.selectedTile[1] * 8, 7, 7);
+
+		// draw hovering tile
+		if (this.selectingTerrain) {
 			// pulse hovering item
 			float sinusoid = (float)Math.sin((this.tickCount % 30) / 30.0f * 2 * Math.PI);
 			this.screen.setColour(new Color(1.0f, 1.0f, 1.0f, 0.5f * sinusoid + 0.5f));
@@ -105,18 +110,20 @@ public class CityGame {
 		int clicks = this.tracker.consumeClicks();
 
 		while (clicks --> 0) {
-			if (this.selectedTerrain) {
+			if (this.selectingTerrain) {
 				// Replace Dropdown Menu
 				if (this.dropdown != null) {
 					this.widgets.remove(this.dropdown); // TODO fancy close
 				}
 
-				CascadeButton develop = new CascadeButton(null, "Develop", this.screen.fontWidth("Develop"), 16, bx -> {});
-				CascadeButton cancel = new CascadeButton(develop, "Cancel", this.screen.fontWidth("Cancel"), 16, bx -> {});
+				CascadeButton develop = new CascadeButton(null, "Develop", this.screen.fontWidth("Develop") + 2, 16, bx -> {});
+				CascadeButton cancel = new CascadeButton(develop, "Cancel", this.screen.fontWidth("Cancel") + 2, 16, bx -> {});
+				this.selectedTile[0] = mouseX/8;
+				this.selectedTile[1] = mouseY/8;
 				this.widgets.add(this.dropdown = new DropdownMenu(mouseX/8 * 8, mouseY/8 * 8, develop, cancel));
 
 				// in case selecting the menu and tick runs again
-				this.selectedTerrain = this.computeSelectTerrain(mouseX, mouseY);
+				this.selectingTerrain = this.computeSelectTerrain(mouseX, mouseY);
 			} else for (AbstractWidget element : this.widgets) {
 				if (element.contains(mouseX, mouseY)) {
 					element.mouseClicked(mouseX, mouseY);
