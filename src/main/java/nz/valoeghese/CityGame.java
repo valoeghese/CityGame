@@ -15,10 +15,11 @@ import java.util.List;
 import java.util.Random;
 
 public class CityGame {
-	public CityGame(Screen screen) {
+	public CityGame(Screen screen, MouseTracker tracker) {
 		this.screen = screen;
 		this.resourceLoader = new ResourceLoader();
 		this.world = new World(new Random().nextLong());
+		this.tracker = tracker;
 		this.worldRenderer = new WorldRenderer(this.world, this.resourceLoader);
 
 		// debug gui
@@ -30,6 +31,7 @@ public class CityGame {
 
 	private final Screen screen;
 	private final ResourceLoader resourceLoader;
+	private final MouseTracker tracker;
 	private final World world;
 	private final WorldRenderer worldRenderer;
 	private final List<GuiElement> guiElements = new ArrayList<>();
@@ -48,13 +50,16 @@ public class CityGame {
 			long time = System.currentTimeMillis();
 			long ticks = (time - lastTick) / TICK_DELAY;
 
+			int mouseX = this.tracker.getMouseX();
+			int mouseY = this.tracker.getMouseY();
+
 			while (ticks --> 0) {
-				tick();
+				tick(mouseX, mouseY);
 				tickCount++;
 				lastTick = time;
 			}
 
-			render();
+			render(mouseX, mouseY);
 		}
 	}
 
@@ -62,19 +67,31 @@ public class CityGame {
 		return this.tickCount;
 	}
 
-	private void render() {
+	private void render(int mouseX, int mouseY) {
 		// draw world terrain
 		this.worldRenderer.render(this.screen);
 		// draw gui
 		for (GuiElement element : this.guiElements) {
-			element.render(this.screen);
+			element.render(this.screen, mouseX, mouseY);
 		}
 
 		// done
 		this.screen.swapBuffers();
 	}
 
-	private void tick() {
+	private void tick(int mouseX, int mouseY) {
+		// handle mouse events
+		int clicks = this.tracker.consumeClicks();
+
+		while (clicks --> 0) {
+			for (GuiElement element : this.guiElements) {
+				if (element.contains(mouseX, mouseY)) {
+					element.mouseClicked(mouseX, mouseY);
+				}
+			}
+		}
+
+		// tick
 		for (GuiElement element : this.guiElements) {
 			element.tick();
 		}

@@ -19,7 +19,7 @@ public class Button implements GuiElement {
 	private final Consumer<Button> onPress;
 
 	@Override
-	public void render(Screen screen) {
+	public void render(Screen screen, int mouseX, int mouseY) {
 		screen.setColour(Color.BLACK);
 		screen.drawRect(this.x, this.y, getWidth(), getHeight());
 	}
@@ -44,6 +44,7 @@ public class Button implements GuiElement {
 	/**
 	 * @return the current actual width of the button.
 	 */
+	@Override
 	public int getWidth() {
 		return this.width;
 	}
@@ -58,7 +59,18 @@ public class Button implements GuiElement {
 	/**
 	 * @return the current actual height of the button.
 	 */
+	@Override
 	public int getHeight() {
 		return this.height;
+	}
+
+	@Override
+	public int getX() {
+		return this.x;
+	}
+
+	@Override
+	public int getY() {
+		return this.y;
 	}
 }

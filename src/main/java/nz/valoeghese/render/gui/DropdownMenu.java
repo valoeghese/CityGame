@@ -32,7 +32,7 @@ public class DropdownMenu implements GuiElement {
 	}
 
 	@Override
-	public void render(Screen screen) {
+	public void render(Screen screen, int mouseX, int mouseY) {
 		// find position
 		final int renderX;
 		boolean drawBackwards;
@@ -56,9 +56,29 @@ public class DropdownMenu implements GuiElement {
 		// draw
 		for (Button button : this.buttons) {
 			int buttonX = drawBackwards ? renderX - button.getWidth() : renderX;
-			button.move(buttonX, buttonY).render(screen);
+			button.move(buttonX, buttonY).render(screen, mouseX, mouseY);
 			buttonY += button.getSpecifiedHeight() + ITEM_GAP;
 		}
+	}
+
+	@Override
+	public int getX() {
+		return this.x;
+	}
+
+	@Override
+	public int getY() {
+		return this.y;
+	}
+
+	@Override
+	public int getWidth() {
+		return this.w;
+	}
+
+	@Override
+	public int getHeight() {
+		return this.h;
 	}
 
 	private static final int MENU_OFFSET = 8;
