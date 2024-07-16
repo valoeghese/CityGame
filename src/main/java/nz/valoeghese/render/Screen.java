@@ -17,6 +17,7 @@ public interface Screen {
 	// width and height for drawing
 	int width();
 	int height();
+	int fontWidth(String text);
 	int fontHeight();
 	// swap buffers
 	void swapBuffers();

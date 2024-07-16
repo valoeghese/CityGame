@@ -19,7 +19,7 @@ public class Button extends AbstractWidget {
 
 	@Override
 	public void render(Screen screen, int mouseX, int mouseY) {
-		screen.setColour(Color.BLACK);
+		screen.setColour(Color.DARK_GRAY);
 		screen.drawRect(this.x, this.y, getWidth(), getHeight());
 
 		screen.setColour(Color.LIGHT_GRAY);

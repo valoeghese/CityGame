@@ -30,8 +30,8 @@ public class CascadeButton extends Button {
 			int advance = Math.max((getSpecifiedWidth() - actualWidth) / 3, 2);
 			actualWidth = Math.min(getSpecifiedWidth(), actualWidth + advance);
 
-			// at halfway start next button cascading
-			if (next != null && actualWidth >= getSpecifiedWidth()/2) {
+			// at 3/5 start next button cascading
+			if (next != null && actualWidth >= getSpecifiedWidth()*3/5) {
 				next.cascading = true;
 			}
 		}

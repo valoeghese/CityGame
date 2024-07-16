@@ -112,6 +112,11 @@ public class PanelScreen extends JPanel implements Screen {
 	}
 
 	@Override
+	public int fontWidth(String text) {
+		return this.drawContext.getFontMetrics().stringWidth(text);
+	}
+
+	@Override
 	public int fontHeight() {
 		return this.drawContext.getFontMetrics().getAscent();
 	}

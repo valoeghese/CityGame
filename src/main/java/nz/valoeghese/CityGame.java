@@ -111,8 +111,8 @@ public class CityGame {
 					this.widgets.remove(this.dropdown); // TODO fancy close
 				}
 
-				CascadeButton develop = new CascadeButton(null, "Develop", 40, 16, bx -> {});
-				CascadeButton cancel = new CascadeButton(develop, "Cancel", 35, 16, bx -> {});
+				CascadeButton develop = new CascadeButton(null, "Develop", this.screen.fontWidth("Develop"), 16, bx -> {});
+				CascadeButton cancel = new CascadeButton(develop, "Cancel", this.screen.fontWidth("Cancel"), 16, bx -> {});
 				this.widgets.add(this.dropdown = new DropdownMenu(mouseX/8 * 8, mouseY/8 * 8, develop, cancel));
 
 				// in case selecting the menu and tick runs again
