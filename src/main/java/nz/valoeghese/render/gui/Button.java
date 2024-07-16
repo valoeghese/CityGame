@@ -28,6 +28,11 @@ public class Button extends AbstractWidget {
 		screen.write(this.message, this.x, this.y + (this.height + screen.fontHeight()) / 2);
 	}
 
+	@Override
+	public void mouseClicked(int mouseX, int mouseY) {
+		this.onPress.accept(this);
+	}
+
 	/**
 	 * Move the button to the given position.
 	 * @return this button.

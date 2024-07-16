@@ -2,6 +2,7 @@ package nz.valoeghese.render.gui;
 
 import nz.valoeghese.render.Screen;
 
+import java.util.List;
 import java.util.stream.Stream;
 
 public class DropdownMenu extends AbstractWidget {
@@ -57,6 +58,11 @@ public class DropdownMenu extends AbstractWidget {
 			button.move(buttonX, buttonY).render(screen, mouseX, mouseY);
 			buttonY += button.getSpecifiedHeight() + ITEM_GAP;
 		}
+	}
+
+	@Override
+	public Iterable<AbstractWidget> getChildren() {
+		return List.of(this.buttons);
 	}
 
 	private static final int MENU_OFFSET = 8;
