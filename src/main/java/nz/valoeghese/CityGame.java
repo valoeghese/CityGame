@@ -10,6 +10,7 @@ import nz.valoeghese.render.gui.GuiElement;
 import nz.valoeghese.util.Logger;
 import nz.valoeghese.world.World;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -70,6 +71,25 @@ public class CityGame {
 	private void render(int mouseX, int mouseY) {
 		// draw world terrain
 		this.worldRenderer.render(this.screen);
+
+		// draw selected tile. we are only selecting tile if no gui in the way
+		boolean selectedTerrain = true;
+		for (GuiElement element : this.guiElements) {
+			if (element.contains(mouseX, mouseY)) {
+				selectedTerrain = false;
+				break;
+			}
+		}
+
+		if (selectedTerrain) {
+			// pulse hovering item
+			float sinusoid = (float)Math.sin((this.tickCount % 20) / 20.0f * 2 * Math.PI);
+			this.screen.setColour(new Color(1.0f, 1.0f, 1.0f, 0.5f * sinusoid + 0.5f));
+			int tileX = mouseX / 8;
+			int tileY = mouseY / 8;
+			this.screen.drawRect(tileX * 8, tileY * 8, 7, 7);
+		}
+
 		// draw gui
 		for (GuiElement element : this.guiElements) {
 			element.render(this.screen, mouseX, mouseY);

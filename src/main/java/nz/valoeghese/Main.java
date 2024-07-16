@@ -11,9 +11,10 @@ public class Main {
 	public static void main(String[] args) {
 		JFrame frame = new JFrame("City Game");
 		final int scale = 2;
+
+		MouseTracker tracker = new MouseTracker(scale);
 		Screen screen = Screen.getScreen(frame, scale);
 
-		MouseTracker tracker = new MouseTracker();
 		CityGame game = new CityGame(screen, tracker);
 
 		// Override default close operation
@@ -26,6 +27,7 @@ public class Main {
 			}
 		});
 		frame.addMouseListener(tracker);
+		frame.addMouseMotionListener(tracker);
 
 		frame.setSize(new Dimension(720 * scale, 480 * scale));
 		frame.setResizable(false);

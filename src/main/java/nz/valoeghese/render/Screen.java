@@ -1,7 +1,11 @@
 package nz.valoeghese.render;
 
+import nz.valoeghese.MouseTracker;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseListener;
 
 /**
  * The game screen.
