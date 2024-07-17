@@ -10,12 +10,15 @@ import java.awt.image.BufferedImage;
 public class WorldRenderer {
 	public WorldRenderer(World world, ResourceLoader resourceLoader) {
 		this.terrain = drawComposite(world.getTerrain(), resourceLoader);
+		this.overlay = new BufferedImage(this.terrain.getWidth(), this.terrain.getHeight(), BufferedImage.TYPE_INT_ARGB);
 	}
 
 	private final BufferedImage terrain;
+	private final BufferedImage overlay;
 
 	public void render(Screen screen) {
 		screen.drawImage(this.terrain, 0, 0);
+		screen.drawImage(this.overlay, 0, 0);
 	}
 
 	public static BufferedImage drawComposite(Terrain terrain, ResourceLoader resourceLoader) {

@@ -45,7 +45,7 @@ public class DropdownMenu extends AbstractWidget {
 		int buttonY;
 
 		if (y - MENU_OFFSET + this.height > screen.height()) {
-			buttonY = y + MENU_OFFSET - this.height;
+			buttonY = Math.min(y + MENU_OFFSET, screen.height()) - this.height;
 		} else {
 			buttonY = Math.max(0, y - MENU_OFFSET);
 		}
