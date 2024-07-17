@@ -9,6 +9,7 @@ import nz.valoeghese.render.WorldRenderer;
 import nz.valoeghese.render.gui.widget.AbstractWidget;
 import nz.valoeghese.render.gui.TopLevelMenu;
 import nz.valoeghese.util.Logger;
+import nz.valoeghese.world.Position;
 import nz.valoeghese.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,7 +39,7 @@ public class CityGame {
 	private long tickCount = 0;
 	private boolean selectingTerrain;
 
-	private int[] selectedTile = {-1, -1};
+	private Position selectedTile = null;
 
 	// guis that are rendering and ticking
 	private final List<TopLevelMenu> renderingMenus = new ArrayList<>();
@@ -67,8 +68,15 @@ public class CityGame {
 	}
 
 	public void selectTile(int tileX, int tileY) {
-		this.selectedTile[0] = tileX;
-		this.selectedTile[1] = tileY;
+		this.selectedTile = new Position(tileX, tileY);
+	}
+
+	public World getWorld() {
+		return this.world;
+	}
+
+	public @Nullable Position getSelectedTile() {
+		return this.selectedTile;
 	}
 
 	public void enqueue(Runnable task) {
@@ -128,8 +136,10 @@ public class CityGame {
 		this.worldRenderer.render(this.screen);
 
 		// draw selected tile
-		this.screen.setColour(new Color(1.0f, 1.0f, 1.0f, 0.75f));
-		this.screen.drawRect(this.selectedTile[0] * 8, this.selectedTile[1] * 8, 7, 7);
+		if (this.selectedTile != null) {
+			this.screen.setColour(new Color(1.0f, 1.0f, 1.0f, 0.75f));
+			this.screen.drawRect(this.selectedTile.x() * 8, this.selectedTile.y() * 8, 7, 7);
+		}
 
 		// draw hovering tile
 		if (this.selectingTerrain) {

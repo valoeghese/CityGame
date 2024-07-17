@@ -1,6 +1,7 @@
 package nz.valoeghese.world.object;
 
 import nz.valoeghese.render.ResourceLoader;
+import nz.valoeghese.world.Position;
 
 import java.awt.*;
 

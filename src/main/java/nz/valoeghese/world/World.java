@@ -3,6 +3,7 @@ package nz.valoeghese.world;
 import nz.valoeghese.world.object.GameObject;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class World {
@@ -13,7 +14,8 @@ public class World {
 
 	private final Terrain terrain;
 	private final GameObject[][] objects;
-	public List<Position> dirtyObjects; // used by the renderer to know whether it should update the objects layer
+	// used by the renderer to know whether it should update the objects layer
+	public final List<Position> dirtyObjects = new ArrayList<>();
 
 	public Terrain getTerrain() {
 		return this.terrain;
