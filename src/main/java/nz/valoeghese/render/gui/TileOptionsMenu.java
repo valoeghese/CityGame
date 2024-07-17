@@ -15,7 +15,10 @@ public class TileOptionsMenu extends TopLevelMenu {
 	protected void addChildren() {
 		CascadeButton develop = new CascadeButton(null, "Develop",
 				this.measurements.fontWidth("Develop") + 2, 16,
-				bx -> this.cityGame.setTopLevelMenu(new DevelopLandMenu(this.x, this.y)));
+				bx -> {
+					assert this.cityGame.getSelectedTile() != null : "this menu will only be open if a tile is selected";
+					this.cityGame.setTopLevelMenu(new DevelopLandMenu(this.x, this.y, this.cityGame.getWorld().getTerrain().getTile(this.cityGame.getSelectedTile())));
+				});
 
 		CascadeButton cancel = new CascadeButton(develop, "Cancel",
 				this.measurements.fontWidth("Cancel") + 2, 16,

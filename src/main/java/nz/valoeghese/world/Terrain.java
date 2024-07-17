@@ -24,6 +24,15 @@ public class Terrain {
 	public final Tile[][] tiles;
 	public final OOBAccessor<Byte> heightmap;
 
+	/**
+	 * Get the tile at the given position.
+	 * @param position the position on the tile grid from which to fetch the tile.
+	 * @return the terrain tile at that position.
+	 */
+	public Tile getTile(Position position) {
+		return this.tiles[position.x()][position.y()];
+	}
+
 	public int getWidth() {
 		return this.width;
 	}
