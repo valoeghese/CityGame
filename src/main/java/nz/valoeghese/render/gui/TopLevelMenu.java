@@ -49,7 +49,7 @@ public abstract class TopLevelMenu extends AbstractWidget {
 	}
 
 	@Override
-	public final void render(Screen screen, int mouseX, int mouseY) {
+	public void render(Screen screen, int mouseX, int mouseY) {
 		for (AbstractWidget widget : this.children) {
 			widget.render(screen, mouseX, mouseY);
 		}

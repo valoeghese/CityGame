@@ -16,6 +16,7 @@ public class Main {
 		Screen screen = Screen.getScreen(frame, scale);
 
 		CityGame game = new CityGame(screen, tracker);
+		KeyTracker keyTracker = new KeyTracker(game);
 
 		// Override default close operation
 		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -28,6 +29,7 @@ public class Main {
 		});
 		frame.addMouseListener(tracker);
 		frame.addMouseMotionListener(tracker);
+		frame.addKeyListener(keyTracker);
 
 		frame.setSize(new Dimension(720 * scale, 480 * scale));
 		frame.setResizable(false);

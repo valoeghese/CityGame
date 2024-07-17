@@ -43,7 +43,7 @@ public class CityGame {
 	// guis that are rendering and ticking
 	private final List<TopLevelMenu> renderingMenus = new ArrayList<>();
 	// the currently open menu. this is the only interactable menu.
-	private TopLevelMenu topLevelMenu;
+	private @Nullable TopLevelMenu topLevelMenu;
 	private boolean newTopLevelMenu;
 
 	public void setTopLevelMenu(@Nullable TopLevelMenu newMenu) {
@@ -60,6 +60,10 @@ public class CityGame {
 		if (newMenu == null) {
 			this.selectTile(-1, -1);
 		}
+	}
+
+	public @Nullable TopLevelMenu getTopLevelMenu() {
+		return this.topLevelMenu;
 	}
 
 	public void selectTile(int tileX, int tileY) {
