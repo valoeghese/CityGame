@@ -3,6 +3,7 @@ package nz.valoeghese.render.gui;
 import nz.valoeghese.render.Screen;
 import org.jetbrains.annotations.Nullable;
 
+import java.awt.*;
 import java.util.function.Consumer;
 
 /**
@@ -23,6 +24,11 @@ public class CascadeButton extends Button {
 	private @Nullable CascadeButton next;
 	private boolean cascading;
 	private int actualWidth = 0;
+
+	@Override
+	public CascadeButton setIcon(@Nullable Image image) {
+		return (CascadeButton) super.setIcon(image);
+	}
 
 	@Override
 	public void tick() {

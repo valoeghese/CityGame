@@ -1,6 +1,7 @@
 package nz.valoeghese.render.gui;
 
 import nz.valoeghese.render.Screen;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 import java.util.function.Consumer;
@@ -14,6 +15,7 @@ public class Button extends AbstractWidget {
 		this.message = message;
 	}
 
+	private @Nullable Image icon;
 	private String message;
 	private final Consumer<Button> onPress;
 
@@ -24,8 +26,15 @@ public class Button extends AbstractWidget {
 		screen.setColour(hover ? Color.LIGHT_GRAY : Color.DARK_GRAY);
 		screen.drawRect(this.x, this.y, getWidth(), getHeight());
 
+		int textLeftX = this.x;
+
+		if (this.icon != null) {
+			screen.drawImage(this.icon, this.x + 1, this.y + (this.height - this.icon.getHeight(null)) / 2);
+			textLeftX += this.icon.getWidth(null) + 2;
+		}
+
 		screen.setColour(hover ? Color.WHITE : Color.LIGHT_GRAY);
-		screen.write(this.message, this.x, this.y + (this.height + screen.fontHeight()) / 2);
+		screen.write(this.message, textLeftX, this.y + (this.height + screen.fontHeight()) / 2);
 	}
 
 	@Override
@@ -40,6 +49,15 @@ public class Button extends AbstractWidget {
 	public Button move(int x, int y)  {
 		this.x = x;
 		this.y = y;
+		return this;
+	}
+
+	/**
+	 * Set the icon on this button.
+	 * @return this button.
+	 */
+	public Button setIcon(@Nullable Image image) {
+		this.icon = image;
 		return this;
 	}
 

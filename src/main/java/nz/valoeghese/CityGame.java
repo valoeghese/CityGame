@@ -30,6 +30,7 @@ public class CityGame {
 	private final WorldRenderer worldRenderer;
 	private final List<AbstractWidget> widgets = new ArrayList<>();
 	private final List<AbstractWidget> toRemove = new ArrayList<>();
+	private final List<AbstractWidget> toAdd = new ArrayList<>();
 
 	private volatile boolean running;
 	private long lastTick = System.currentTimeMillis();
@@ -105,11 +106,13 @@ public class CityGame {
 		// done
 		this.screen.swapBuffers();
 
-		// remove widgets
+		// modify widgets
 		for (AbstractWidget widget : this.toRemove) {
 			this.widgets.remove(widget);
 		}
 		this.toRemove.clear();
+		this.widgets.addAll(this.toAdd);
+		this.toAdd.clear();
 	}
 
 	private void tick(int mouseX, int mouseY) {
@@ -120,15 +123,31 @@ public class CityGame {
 			if (this.selectingTerrain) {
 				// Replace Dropdown Menu
 				if (this.dropdown != null) {
-					this.widgets.remove(this.dropdown); // TODO fancy close
+					this.widgets.remove(this.dropdown); // TODO fancy close on cancel
 				}
 
-				CascadeButton develop = new CascadeButton(null, "Develop", this.screen.fontWidth("Develop") + 2, 16, bx -> {});
+				CascadeButton develop = new CascadeButton(null, "Develop", this.screen.fontWidth("Develop") + 2, 16, bx -> {
+					if (this.dropdown != null) {
+						this.toRemove.add(this.dropdown);
+
+						CascadeButton housing = new CascadeButton(null, "Housing", this.screen.fontWidth("Housing") + 8 + 2, 16, bxa -> {
+								}).setIcon(this.resourceLoader.getTexture("build/farmhouse.png").getSubimage(0, 8, 8, 8));
+						CascadeButton cancel = new CascadeButton(housing, "Cancel", this.screen.fontWidth("Cancel") + 2, 16, bxa -> {
+							this.toRemove.add(this.dropdown);
+							this.selectedTile[0] = -1;
+							this.selectedTile[1] = -1;
+						});
+
+						this.toAdd.add(this.dropdown = new DropdownMenu(mouseX/8 * 8, mouseY/8 * 8, housing, cancel));
+					}
+				});
+
 				CascadeButton cancel = new CascadeButton(develop, "Cancel", this.screen.fontWidth("Cancel") + 2, 16, bx -> {
 					this.toRemove.add(this.dropdown);
 					this.selectedTile[0] = -1;
 					this.selectedTile[1] = -1;
 				});
+
 				this.selectedTile[0] = mouseX/8;
 				this.selectedTile[1] = mouseY/8;
 				this.widgets.add(this.dropdown = new DropdownMenu(mouseX/8 * 8, mouseY/8 * 8, develop, cancel));

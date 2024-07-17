@@ -45,7 +45,7 @@ public class PanelScreen extends JPanel implements Screen {
 	}
 
 	@Override
-	public void draw(Image image, int x, int y) {
+	public void drawImage(Image image, int x, int y) {
 		this.drawContext.drawImage(image, x - this.stencilOffset[0], y - this.stencilOffset[1], null);
 	}
 

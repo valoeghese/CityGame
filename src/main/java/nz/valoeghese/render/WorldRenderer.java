@@ -15,7 +15,7 @@ public class WorldRenderer {
 	private final BufferedImage terrain;
 
 	public void render(Screen screen) {
-		screen.draw(this.terrain, 0, 0);
+		screen.drawImage(this.terrain, 0, 0);
 	}
 
 	public static BufferedImage drawComposite(Terrain terrain, ResourceLoader resourceLoader) {

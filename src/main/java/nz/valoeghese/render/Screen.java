@@ -7,7 +7,7 @@ import java.awt.*;
  * The game screen.
  */
 public interface Screen {
-	void draw(Image image, int x, int y);
+	void drawImage(Image image, int x, int y);
 	void setColour(Color colour);
 	void drawOutline(int x, int y, int width, int height);
 	void drawRect(int x, int y, int width, int height);
