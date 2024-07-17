@@ -1,9 +1,7 @@
-package nz.valoeghese.render.gui;
+package nz.valoeghese.render.gui.widget;
 
-import nz.valoeghese.CityGame;
 import nz.valoeghese.render.Screen;
 
-import java.awt.*;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -27,13 +25,6 @@ public class DropdownMenu extends AbstractWidget {
 
 	private int cornerX;
 	private int cornerY;
-
-	@Override
-	public void tick() {
-		for (Button button : this.buttons) {
-			button.tick();
-		}
-	}
 
 	@Override
 	public void render(Screen screen, int mouseX, int mouseY) {

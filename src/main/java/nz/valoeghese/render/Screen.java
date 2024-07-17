@@ -6,7 +6,7 @@ import java.awt.*;
 /**
  * The game screen.
  */
-public interface Screen {
+public interface Screen extends ScreenMeasurements {
 	void drawImage(Image image, int x, int y);
 	void setColour(Color colour);
 	void drawOutline(int x, int y, int width, int height);
@@ -14,11 +14,7 @@ public interface Screen {
 	void write(String text, int x, int y);
 	void stencil(int x, int y, int width, int height);
 	void endStencil();
-	// width and height for drawing
-	int width();
-	int height();
-	int fontWidth(String text);
-	int fontHeight();
+
 	// swap buffers
 	void swapBuffers();
 

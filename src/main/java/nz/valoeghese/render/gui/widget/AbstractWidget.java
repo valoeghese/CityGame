@@ -1,4 +1,4 @@
-package nz.valoeghese.render.gui;
+package nz.valoeghese.render.gui.widget;
 
 import nz.valoeghese.render.Screen;
 

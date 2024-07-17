@@ -2,17 +2,19 @@ package nz.valoeghese;
 
 import nz.valoeghese.render.ResourceLoader;
 import nz.valoeghese.render.Screen;
-import nz.valoeghese.render.gui.CascadeButton;
-import nz.valoeghese.render.gui.DropdownMenu;
+import nz.valoeghese.render.gui.TileOptionsMenu;
+import nz.valoeghese.render.gui.widget.CascadeButton;
+import nz.valoeghese.render.gui.widget.DropdownMenu;
 import nz.valoeghese.render.WorldRenderer;
-import nz.valoeghese.render.gui.AbstractWidget;
+import nz.valoeghese.render.gui.widget.AbstractWidget;
+import nz.valoeghese.render.gui.TopLevelMenu;
 import nz.valoeghese.util.Logger;
 import nz.valoeghese.world.World;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Random;
 
 public class CityGame {
 	public CityGame(Screen screen, MouseTracker tracker) {
@@ -28,9 +30,8 @@ public class CityGame {
 	private final MouseTracker tracker;
 	private final World world;
 	private final WorldRenderer worldRenderer;
-	private final List<AbstractWidget> widgets = new ArrayList<>();
-	private final List<AbstractWidget> toRemove = new ArrayList<>();
-	private final List<AbstractWidget> toAdd = new ArrayList<>();
+
+	private final Queue<Runnable> tasks = new ArrayDeque<>();
 
 	private volatile boolean running;
 	private long lastTick = System.currentTimeMillis();
@@ -38,7 +39,39 @@ public class CityGame {
 	private boolean selectingTerrain;
 
 	private int[] selectedTile = {-1, -1};
-	private DropdownMenu dropdown;
+
+	// guis that are rendering and ticking
+	private final List<TopLevelMenu> renderingMenus = new ArrayList<>();
+	// the currently open menu. this is the only interactable menu.
+	private TopLevelMenu topLevelMenu;
+	private boolean newTopLevelMenu;
+
+	public void setTopLevelMenu(@Nullable TopLevelMenu newMenu) {
+		// close existing menu
+		if (!this.renderingMenus.isEmpty()) {
+			TopLevelMenu currentMenu = this.renderingMenus.getFirst();
+			currentMenu.onClose().thenAccept(v -> this.enqueue(() -> this.renderingMenus.remove(currentMenu)));
+		}
+
+		this.topLevelMenu = newMenu;
+		this.newTopLevelMenu = newMenu != null; // add the new menu to rendering menus
+
+		// no menu implies no selected tile.
+		if (newMenu == null) {
+			this.selectTile(-1, -1);
+		}
+	}
+
+	public void selectTile(int tileX, int tileY) {
+		this.selectedTile[0] = tileX;
+		this.selectedTile[1] = tileY;
+	}
+
+	public void enqueue(Runnable task) {
+		synchronized (this.tasks) {
+			this.tasks.add(task);
+		}
+	}
 
 	/**
 	 * Called to run the main loop of the game.
@@ -60,22 +93,28 @@ public class CityGame {
 				tick(mouseX, mouseY);
 				tickCount++;
 				lastTick = time;
+
+				if (ticks > 0) this.selectingTerrain = this.computeSelectTerrain(mouseX, mouseY);
 			}
 		}
 	}
 
+	/**
+	 * Compute whether the given mouse position is selecting the terrain.
+	 * @param mouseX the mouse x on the screen.
+	 * @param mouseY the mouse y on the screen.
+	 * @return whether the given mouse x and y are selecting terrain.
+	 */
 	private boolean computeSelectTerrain(int mouseX, int mouseY) {
 		// determine if we're selecting terrain
 		// we are only selecting a tile if no gui in the way
-		for (AbstractWidget element : this.widgets) {
-			if (element.contains(mouseX, mouseY)) {
-				return false;
-			}
-		}
-
-		return true;
+		return this.topLevelMenu == null || !this.topLevelMenu.contains(mouseX, mouseY);
 	}
 
+	/**
+	 * Get the ticks elapsed since start.
+	 * @return the ticks elapsed since start.
+	 */
 	public long getTickCount() {
 		return this.tickCount;
 	}
@@ -99,20 +138,12 @@ public class CityGame {
 		}
 
 		// draw gui
-		for (AbstractWidget element : this.widgets) {
-			element.render(this.screen, mouseX, mouseY);
+		for (TopLevelMenu menu : this.renderingMenus) {
+			menu.render(this.screen, mouseX, mouseY);
 		}
 
 		// done
 		this.screen.swapBuffers();
-
-		// modify widgets
-		for (AbstractWidget widget : this.toRemove) {
-			this.widgets.remove(widget);
-		}
-		this.toRemove.clear();
-		this.widgets.addAll(this.toAdd);
-		this.toAdd.clear();
 	}
 
 	private void tick(int mouseX, int mouseY) {
@@ -121,40 +152,9 @@ public class CityGame {
 
 		while (clicks --> 0) {
 			if (this.selectingTerrain) {
-				// Replace Dropdown Menu
-				if (this.dropdown != null) {
-					this.widgets.remove(this.dropdown); // TODO fancy close on cancel
-				}
-
-				CascadeButton develop = new CascadeButton(null, "Develop", this.screen.fontWidth("Develop") + 2, 16, bx -> {
-					if (this.dropdown != null) {
-						this.toRemove.add(this.dropdown);
-
-						CascadeButton housing = new CascadeButton(null, "Housing", this.screen.fontWidth("Housing") + 8 + 2, 16, bxa -> {
-								}).setIcon(this.resourceLoader.getTexture("build/farmhouse.png").getSubimage(0, 8, 8, 8));
-						CascadeButton cancel = new CascadeButton(housing, "Cancel", this.screen.fontWidth("Cancel") + 2, 16, bxa -> {
-							this.toRemove.add(this.dropdown);
-							this.selectedTile[0] = -1;
-							this.selectedTile[1] = -1;
-						});
-
-						this.toAdd.add(this.dropdown = new DropdownMenu(mouseX/8 * 8, mouseY/8 * 8, housing, cancel));
-					}
-				});
-
-				CascadeButton cancel = new CascadeButton(develop, "Cancel", this.screen.fontWidth("Cancel") + 2, 16, bx -> {
-					this.toRemove.add(this.dropdown);
-					this.selectedTile[0] = -1;
-					this.selectedTile[1] = -1;
-				});
-
-				this.selectedTile[0] = mouseX/8;
-				this.selectedTile[1] = mouseY/8;
-				this.widgets.add(this.dropdown = new DropdownMenu(mouseX/8 * 8, mouseY/8 * 8, develop, cancel));
-
-				// in case selecting the menu and tick runs again
-				this.selectingTerrain = this.computeSelectTerrain(mouseX, mouseY);
-			} else for (AbstractWidget element : this.widgets) {
+				this.selectTile(mouseX/8, mouseY/8);
+				this.setTopLevelMenu(new TileOptionsMenu(mouseX/8 * 8, mouseY/8 * 8));
+			} else for (AbstractWidget element : this.topLevelMenu.getChildren()) {
 				if (element.contains(mouseX, mouseY)) {
 					element.mouseClicked(mouseX, mouseY);
 				}
@@ -162,8 +162,25 @@ public class CityGame {
 		}
 
 		// tick
-		for (AbstractWidget element : this.widgets) {
-			element.tick();
+		for (TopLevelMenu menu : this.renderingMenus) {
+			menu.tick();
+		}
+
+		// tasks
+		synchronized (this.tasks) {
+			Iterator<Runnable> tasks = this.tasks.iterator();
+
+			while (tasks.hasNext()) {
+				tasks.next().run();
+				tasks.remove();
+			}
+		}
+
+		// add new menu to rendering
+		if (this.newTopLevelMenu) {
+			this.newTopLevelMenu = false;
+			this.topLevelMenu.init(this, this.screen, this.resourceLoader);
+			this.renderingMenus.addFirst(this.topLevelMenu);
 		}
 	}
 
